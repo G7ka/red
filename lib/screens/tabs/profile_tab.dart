@@ -88,58 +88,59 @@ class _ProfileTabState extends State<ProfileTab> {
       profileImages.add(mainImageUrl);
     }
 
-    return RefreshIndicator(
-      color: const Color(0xFF7C3AED),
-      backgroundColor: const Color(0xFF1A1A2E),
-      onRefresh: () async {
-        setState(() {});
-        await Future.delayed(const Duration(milliseconds: 500));
-      },
-      child: CustomScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        slivers: [
-        // Hero Header
-        SliverToBoxAdapter(
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(24, 60, 24, 24),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  const Color(0xFF7C3AED).withOpacity(0.15),
-                  const Color(0xFF0A0A0F),
-                ],
-              ),
-            ),
-            child: Column(
-              children: [
-                // Settings row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'My Profile',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        _buildIconButton(
-                          Icons.settings_outlined,
-                          onTap: () => Scaffold.of(context).openDrawer(),
-                        ),
-                      ],
-                    ),
-                  ],
+    return Scaffold(
+      backgroundColor: const Color(0xFF0A0A0F),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        centerTitle: false,
+        titleSpacing: 24,
+        backgroundColor: const Color(0xFF0A0A0F),
+        elevation: 0,
+        title: const Text(
+          'Profile',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            letterSpacing: -0.4,
+          ),
+        ),
+        actions: [
+          _buildIconButton(
+            Icons.settings_outlined,
+            onTap: () => Scaffold.of(context).openDrawer(),
+          ),
+          const SizedBox(width: 12),
+        ],
+      ),
+      body: RefreshIndicator(
+        color: const Color(0xFF7C3AED),
+        backgroundColor: const Color(0xFF1A1A2E),
+        onRefresh: () async {
+          setState(() {});
+          await Future.delayed(const Duration(milliseconds: 500));
+        },
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            // Hero Header
+            SliverToBoxAdapter(
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      const Color(0xFF7C3AED).withOpacity(0.15),
+                      const Color(0xFF0A0A0F),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 24),
-
-                // Main profile image
-                GestureDetector(
+                child: Column(
+                  children: [
+                    // Main profile image
+                    GestureDetector(
                   onTap: () => _addProfilePicture(uid, 0, profileImages),
                   child: Stack(
                     children: [
@@ -286,7 +287,8 @@ class _ProfileTabState extends State<ProfileTab> {
 
       ],
     ),
-  );
+  ),
+);
 }
 
   Widget _buildIconButton(IconData icon, {required VoidCallback onTap}) {

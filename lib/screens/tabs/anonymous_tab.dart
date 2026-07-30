@@ -109,22 +109,24 @@ class _AnonymousTabState extends State<AnonymousTab>
         slivers: [
           SliverAppBar(
             automaticallyImplyLeading: false,
-            expandedHeight: 80,
-            floating: false,
             pinned: true,
+            floating: false,
+            centerTitle: false,
+            titleSpacing: 24,
             backgroundColor: const Color(0xFF0A0A0F),
+            elevation: 0,
             title: const Text(
               'Anonymous',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 22,
+                fontSize: 24,
                 fontWeight: FontWeight.w700,
-                letterSpacing: -0.3,
+                letterSpacing: -0.4,
               ),
             ),
             actions: [
               _buildNotificationButton(),
-              const SizedBox(width: 8),
+              const SizedBox(width: 12),
             ],
           ),
 

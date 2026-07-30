@@ -20,6 +20,8 @@ class ChatsTab extends StatelessWidget {
       backgroundColor: const Color(0xFF0A0A0F),
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        centerTitle: false,
+        titleSpacing: 24,
         backgroundColor: const Color(0xFF0A0A0F),
         elevation: 0,
         title: const Text(
@@ -28,6 +30,7 @@ class ChatsTab extends StatelessWidget {
             color: Colors.white,
             fontSize: 24,
             fontWeight: FontWeight.w700,
+            letterSpacing: -0.4,
           ),
         ),
       ),
@@ -52,15 +55,17 @@ class ChatsTab extends StatelessWidget {
                       height: 80,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.red.withOpacity(0.1),
+                        color: const Color(0xFF7C3AED).withOpacity(0.12),
                       ),
-                      child: Icon(Icons.sms_failed_outlined,
-                          size: 36,
-                          color: Colors.red.withOpacity(0.6)),
+                      child: const Icon(
+                        Icons.wifi_off_rounded,
+                        size: 36,
+                        color: Color(0xFF7C3AED),
+                      ),
                     ),
                     const SizedBox(height: 20),
                     const Text(
-                      'Failed to load chats',
+                      'No connection',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 19,
@@ -103,12 +108,13 @@ class ChatsTab extends StatelessWidget {
                       height: 80,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: const Color(0xFF7C3AED).withOpacity(0.1),
+                        color: const Color(0xFF7C3AED).withOpacity(0.12),
                       ),
-                      child: Icon(Icons.chat_bubble_outline,
-                          size: 36,
-                          color:
-                              const Color(0xFF7C3AED).withOpacity(0.5)),
+                      child: const Icon(
+                        Icons.chat_bubble_outline_rounded,
+                        size: 36,
+                        color: Color(0xFF7C3AED),
+                      ),
                     ),
                     const SizedBox(height: 20),
                     const Text(
