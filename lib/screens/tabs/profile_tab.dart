@@ -90,29 +90,6 @@ class _ProfileTabState extends State<ProfileTab> {
 
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0F),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        centerTitle: false,
-        titleSpacing: 24,
-        backgroundColor: const Color(0xFF0A0A0F),
-        elevation: 0,
-        title: const Text(
-          'Profile',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.w700,
-            letterSpacing: -0.4,
-          ),
-        ),
-        actions: [
-          _buildIconButton(
-            Icons.settings_outlined,
-            onTap: () => Scaffold.of(context).openDrawer(),
-          ),
-          const SizedBox(width: 12),
-        ],
-      ),
       body: RefreshIndicator(
         color: const Color(0xFF7C3AED),
         backgroundColor: const Color(0xFF1A1A2E),
@@ -123,22 +100,50 @@ class _ProfileTabState extends State<ProfileTab> {
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           slivers: [
-            // Hero Header
+            // Hero Gradient Header
             SliverToBoxAdapter(
               child: Container(
-                padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+                padding: EdgeInsets.fromLTRB(
+                  24,
+                  MediaQuery.of(context).padding.top + 16,
+                  24,
+                  24,
+                ),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      const Color(0xFF7C3AED).withOpacity(0.15),
+                      const Color(0xFF7C3AED).withOpacity(0.35),
+                      const Color(0xFF5B21B6).withOpacity(0.12),
                       const Color(0xFF0A0A0F),
                     ],
+                    stops: const [0.0, 0.5, 1.0],
                   ),
                 ),
                 child: Column(
                   children: [
+                    // Header Row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Profile',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.4,
+                          ),
+                        ),
+                        _buildIconButton(
+                          Icons.settings_outlined,
+                          onTap: () => Scaffold.of(context).openDrawer(),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+
                     // Main profile image
                     GestureDetector(
                   onTap: () => _addProfilePicture(uid, 0, profileImages),
