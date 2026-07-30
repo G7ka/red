@@ -69,6 +69,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               style: TextStyle(color: Color(0xFF7C3AED), fontSize: 13),
             ),
           ),
+          TextButton(
+            onPressed: _clearAllNotifications,
+            child: Text(
+              'Clear all',
+              style: TextStyle(color: Colors.red[300], fontSize: 13),
+            ),
+          ),
         ],
       ),
       body: StreamBuilder<List<Map<String, dynamic>>>(
@@ -190,7 +197,21 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   break;
               }
 
-              return Container(
+              return Dismissible(
+                key: Key(notifId),
+                direction: DismissDirection.endToStart,
+                background: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(right: 24),
+                  child: const Icon(Icons.delete_outline, color: Colors.red, size: 24),
+                ),
+                onDismissed: (_) => _deleteNotification(notifId),
+                child: Container(
                 margin:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 decoration: BoxDecoration(
@@ -257,12 +278,51 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   onTap: () => _onNotificationTap(
                       notifId, type, isRead, notificationData, fromName),
                 ),
+              ),
               );
             },
           );
         },
       ),
     );
+  }
+
+  Future<void> _deleteNotification(String notifId) async {
+    try {
+      await _notificationService.deleteNotification(notifId);
+    } catch (_) {}
+  }
+
+  Future<void> _clearAllNotifications() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: const Color(0xFF1A1A2E),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text('Clear All', style: TextStyle(color: Colors.white)),
+        content: const Text(
+          'Remove all notifications? This cannot be undone.',
+          style: TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text('Cancel', style: TextStyle(color: Colors.grey[400])),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Clear All',
+                style: TextStyle(color: Colors.red, fontWeight: FontWeight.w600)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      try {
+        await _notificationService.deleteAllNotifications();
+      } catch (_) {}
+    }
   }
 
   Future<void> _markAllAsRead() async {

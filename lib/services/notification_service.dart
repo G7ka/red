@@ -149,4 +149,31 @@ class NotificationService {
       print('Error marking chat notifications as read: $e');
     }
   }
+
+  Future<void> deleteNotification(String notificationId) async {
+    try {
+      await _supabase
+          .from('notifications')
+          .delete()
+          .eq('id', notificationId);
+    } catch (e) {
+      print('Error deleting notification: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> deleteAllNotifications() async {
+    final user = _supabase.auth.currentUser;
+    if (user == null) return;
+
+    try {
+      await _supabase
+          .from('notifications')
+          .delete()
+          .eq('to_uid', user.id);
+    } catch (e) {
+      print('Error deleting all notifications: $e');
+      rethrow;
+    }
+  }
 }

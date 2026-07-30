@@ -151,10 +151,8 @@ class _HomeScreenState extends State<HomeScreen> {
       elevation: 0,
       child: ClipRRect(
         borderRadius: const BorderRadius.horizontal(right: Radius.circular(24)),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
-          child: Container(
-            color: const Color(0xFF2A104E).withOpacity(0.90), // Very dark frosted purple
+        child: Container(
+            color: const Color(0xFF1E0A3C),
             child: SafeArea(
               child: Column(
                 children: [
@@ -323,7 +321,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-    ),
     );
   }
 
