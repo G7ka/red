@@ -54,9 +54,12 @@ class ChatService {
     });
 
     // Update chat last message timestamp
-    await _supabase.from('chats').update({
-      'last_message_at': DateTime.now().toIso8601String(),
-    }).eq('id', chatId);
+    try {
+      await _supabase.from('chats').update({
+        'last_message': text,
+        'last_message_time': DateTime.now().toIso8601String(),
+      }).eq('id', chatId);
+    } catch (_) {}
 
     // Send push notification
     final fromUser = await _supabase
@@ -104,9 +107,12 @@ class ChatService {
       'read_by': [],
     });
 
-    await _supabase.from('chats').update({
-      'last_message_at': DateTime.now().toIso8601String(),
-    }).eq('id', chatId);
+    try {
+      await _supabase.from('chats').update({
+        'last_message': '📷 Photo',
+        'last_message_time': DateTime.now().toIso8601String(),
+      }).eq('id', chatId);
+    } catch (_) {}
   }
 
   Future<void> sendVoiceMessage({
@@ -135,9 +141,12 @@ class ChatService {
       'read_by': [],
     });
 
-    await _supabase.from('chats').update({
-      'last_message_at': DateTime.now().toIso8601String(),
-    }).eq('id', chatId);
+    try {
+      await _supabase.from('chats').update({
+        'last_message': '🎤 Voice message',
+        'last_message_time': DateTime.now().toIso8601String(),
+      }).eq('id', chatId);
+    } catch (_) {}
   }
 
   // ============ MARK AS SEEN ============
@@ -205,7 +214,7 @@ class ChatService {
     return _supabase
         .from('chats')
         .stream(primaryKey: ['id'])
-        .order('last_message_at', ascending: false)
+        .order('created_at', ascending: false)
         .map((chats) {
       // Filter to only chats where user is a participant
       return chats.where((chat) {
@@ -348,8 +357,11 @@ class ChatService {
       'read_by': [],
     });
 
-    await _supabase.from('chats').update({
-      'last_message_at': DateTime.now().toIso8601String(),
-    }).eq('id', chatId);
+    try {
+      await _supabase.from('chats').update({
+        'last_message': text,
+        'last_message_time': DateTime.now().toIso8601String(),
+      }).eq('id', chatId);
+    } catch (_) {}
   }
 }
