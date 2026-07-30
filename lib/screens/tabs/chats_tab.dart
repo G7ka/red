@@ -43,7 +43,6 @@ class ChatsTab extends StatelessWidget {
             );
           }
 
-          // Only show "no internet" if there's an error AND no data at all
           if (snapshot.hasError && !snapshot.hasData) {
             return Center(
               child: Padding(
@@ -59,14 +58,14 @@ class ChatsTab extends StatelessWidget {
                         color: const Color(0xFF7C3AED).withOpacity(0.15),
                       ),
                       child: const Icon(
-                        Icons.wifi_off_rounded,
+                        Icons.error_outline_rounded,
                         size: 38,
                         color: Color(0xFF7C3AED),
                       ),
                     ),
                     const SizedBox(height: 20),
                     const Text(
-                      'No Internet Connection',
+                      'Couldn\'t Load Chats',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -75,7 +74,7 @@ class ChatsTab extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'We couldn\'t load your chats. Please check your Wi-Fi or mobile data connection.',
+                      'Something went wrong while loading your conversations. Pull down to retry or check your connection.',
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.6),
                         fontSize: 14,

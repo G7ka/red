@@ -23,7 +23,7 @@ class CallService {
 
     try {
       final data = await _supabase
-          .from('profiles')
+          .from('users')
           .select('call_seconds_used, last_call_date')
           .eq('id', user.id)
           .single();
@@ -71,7 +71,7 @@ class CallService {
       final currentUsed = info['usedSeconds'] ?? 0;
       final newUsed = currentUsed + seconds;
       
-      await _supabase.from('profiles').update({
+      await _supabase.from('users').update({
         'call_seconds_used': newUsed,
         'last_call_date': DateTime.now().toIso8601String(),
       }).eq('id', user.id);

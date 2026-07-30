@@ -211,17 +211,33 @@ class ChatService {
     final user = _supabase.auth.currentUser;
     if (user == null) return Stream.value([]);
 
-    return _supabase
-        .from('chats')
-        .stream(primaryKey: ['id'])
-        .order('created_at', ascending: false)
-        .map((chats) {
-      // Filter to only chats where user is a participant
-      return chats.where((chat) {
+    // Do not .order() on Realtime streams — it can throw and trigger a false
+    // "no internet" UI. Sort client-side instead.
+    return _supabase.from('chats').stream(primaryKey: ['id']).map((chats) {
+      final filtered = chats.where((chat) {
         final participants = List<String>.from(chat['participants'] ?? []);
         return participants.contains(user.id);
       }).toList();
+
+      filtered.sort((a, b) {
+        final aTime = _chatSortTime(a);
+        final bTime = _chatSortTime(b);
+        return bTime.compareTo(aTime);
+      });
+
+      return filtered;
     });
+  }
+
+  DateTime _chatSortTime(Map<String, dynamic> chat) {
+    final lastMsg = chat['last_message_time'] as String?;
+    if (lastMsg != null) {
+      final parsed = DateTime.tryParse(lastMsg);
+      if (parsed != null) return parsed;
+    }
+    final created = chat['created_at'] as String?;
+    return DateTime.tryParse(created ?? '') ??
+        DateTime.fromMillisecondsSinceEpoch(0);
   }
 
   // ============ TYPING INDICATORS (Realtime Broadcast) ============

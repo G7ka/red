@@ -5,7 +5,6 @@ import 'dart:io';
 
 import '../../services/auth_service.dart';
 import '../auth/login_screen.dart';
-import '../../widgets/full_screen_media_viewer.dart';
 
 class ProfileTab extends StatefulWidget {
   const ProfileTab({super.key});
@@ -14,13 +13,19 @@ class ProfileTab extends StatefulWidget {
   State<ProfileTab> createState() => _ProfileTabState();
 }
 
-class _ProfileTabState extends State<ProfileTab> {
+class _ProfileTabState extends State<ProfileTab>
+    with AutomaticKeepAliveClientMixin {
   final _supabase = Supabase.instance.client;
   final _imagePicker = ImagePicker();
   bool _uploadingImage = false;
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     final user = _supabase.auth.currentUser;
     if (user == null) {
       return const Scaffold(
@@ -30,471 +35,61 @@ class _ProfileTabState extends State<ProfileTab> {
       );
     }
 
-    return Material(
-      color: const Color(0xFF0A0A0F),
-      child: StreamBuilder<List<Map<String, dynamic>>>(
-        stream: _supabase
-            .from('users')
-            .stream(primaryKey: ['id']).eq('id', user.id),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(color: Color(0xFF7C3AED)),
-            );
-          }
-
-          if (snapshot.hasError ||
-              !snapshot.hasData ||
-              snapshot.data!.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline,
-                      color: Colors.red, size: 48),
-                  const SizedBox(height: 16),
-                  const Text('Error loading profile',
-                      style: TextStyle(color: Colors.white70)),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => setState(() {}),
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          final data = snapshot.data!.first;
-          return _buildProfileContent(user.id, data);
-        },
-      ),
-    );
-  }
-
-  Widget _buildProfileContent(String uid, Map<String, dynamic> data) {
-    final displayName = data['display_name'] as String? ?? 'No name';
-    final firstName = data['first_name'] as String? ?? '';
-    final lastName = data['last_name'] as String? ?? '';
-    final fullName = '$firstName $lastName'.trim();
-    final age = _calculateAge(data['dob'] as String?);
-    final gender = data['gender'] as String?;
-    final interests = List<String>.from(data['interests'] ?? []);
-    final profileImages = List<String>.from(data['profile_images'] ?? []);
-    final mainImageUrl = data['image_url'] as String?;
-
-    // Fallback to main image if profileImages is empty
-    if (profileImages.isEmpty && mainImageUrl != null) {
-      profileImages.add(mainImageUrl);
-    }
-
-    final topPadding = MediaQuery.of(context).padding.top;
-
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0F),
       body: Stack(
+        fit: StackFit.expand,
         children: [
-          // Fixed ambient purple gradient (never shakes or stutters on scroll)
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 280,
-            child: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFF2D1556),
-                    Color(0xFF0A0A0F),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          const _ProfileBackgroundGradient(),
+          StreamBuilder<List<Map<String, dynamic>>>(
+            stream: _supabase
+                .from('users')
+                .stream(primaryKey: ['id'])
+                .eq('id', user.id),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting &&
+                  !snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(color: Color(0xFF7C3AED)),
+                );
+              }
 
-          // Scrollable Content
-          RefreshIndicator(
-            color: const Color(0xFF7C3AED),
-            backgroundColor: const Color(0xFF1A1A2E),
-            onRefresh: () async {
-              setState(() {});
-              await Future.delayed(const Duration(milliseconds: 500));
-            },
-            child: CustomScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Container(
-                    padding: EdgeInsets.fromLTRB(24, topPadding + 16, 24, 24),
-                    child: Column(
-                      children: [
-                        // Header Row
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Profile',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: -0.4,
-                              ),
-                            ),
-                            _buildIconButton(
-                              Icons.settings_outlined,
-                              onTap: () => Scaffold.of(context).openDrawer(),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 24),
-
-                    // Main profile image
-                    GestureDetector(
-                  onTap: () => _addProfilePicture(uid, 0, profileImages),
-                  child: Stack(
+              if (snapshot.hasError ||
+                  !snapshot.hasData ||
+                  snapshot.data!.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Container(
-                        width: 110,
-                        height: 110,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: const Color(0xFF7C3AED),
-                            width: 3,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color:
-                                  const Color(0xFF7C3AED).withOpacity(0.3),
-                              blurRadius: 20,
-                              spreadRadius: 2,
-                            ),
-                          ],
-                        ),
-                        child: ClipOval(
-                          child: profileImages.isNotEmpty
-                              ? Image.network(
-                                  profileImages[0],
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) => Container(
-                                    color: const Color(0xFF1A1A2E),
-                                    child: const Icon(Icons.person,
-                                        color: Colors.white54, size: 50),
-                                  ),
-                                )
-                              : Container(
-                                  color: const Color(0xFF1A1A2E),
-                                  child: const Icon(Icons.person,
-                                      color: Colors.white54, size: 50),
-                                ),
-                        ),
-                      ),
-                      if (_uploadingImage)
-                        Positioned.fill(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.black.withOpacity(0.5),
-                            ),
-                            child: const Center(
-                              child: SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: CircularProgressIndicator(
-                                  color: Color(0xFF7C3AED),
-                                  strokeWidth: 2,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      Positioned(
-                        bottom: 2,
-                        right: 2,
-                        child: Container(
-                          width: 32,
-                          height: 32,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF7C3AED),
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                color: const Color(0xFF0A0A0F), width: 2),
-                          ),
-                          child: const Icon(Icons.camera_alt,
-                              size: 16, color: Colors.white),
-                        ),
+                      const Icon(Icons.error_outline,
+                          color: Colors.red, size: 48),
+                      const SizedBox(height: 16),
+                      const Text('Error loading profile',
+                          style: TextStyle(color: Colors.white70)),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () => setState(() {}),
+                        child: const Text('Retry'),
                       ),
                     ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                // Name & age
-                Text(
-                  fullName.isNotEmpty ? fullName : displayName,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (age != null) ...[
-                      Icon(Icons.cake_outlined,
-                          color: Colors.grey[500], size: 16),
-                      const SizedBox(width: 4),
-                      Text(
-                        '$age years',
-                        style: TextStyle(
-                            color: Colors.grey[400], fontSize: 14),
-                      ),
-                    ],
-                    if (gender != null) ...[
-                      const SizedBox(width: 12),
-                      Icon(
-                        gender == 'male' ? Icons.male : Icons.female,
-                        color: Colors.grey[500],
-                        size: 16,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        gender[0].toUpperCase() + gender.substring(1),
-                        style: TextStyle(
-                            color: Colors.grey[400], fontSize: 14),
-                      ),
-                    ],
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        // Additional profile pictures
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: _buildPhotosGrid(uid, profileImages),
-          ),
-        ),
-
-        // Interests
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
-            child: _buildInterestsCard(interests, uid),
-          ),
-        ),
-
-        // Bottom padding for floating nav
-        const SliverToBoxAdapter(
-          child: SizedBox(height: 100),
-        ),
-
-      ],
-    ),
-  ),
-],
-),
-);
-}
-
-  Widget _buildIconButton(IconData icon, {required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: const Color(0xFF1A1A2E),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-              color: const Color(0xFF7C3AED).withOpacity(0.15)),
-        ),
-        child: Icon(icon, color: Colors.white70, size: 20),
-      ),
-    );
-  }
-
-  Widget _buildPhotosGrid(String uid, List<String> profileImages) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const Text(
-              'Photos',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 17,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const Spacer(),
-            if (profileImages.length < 5)
-              Text(
-                '${5 - profileImages.length} slots open',
-                style: TextStyle(color: Colors.grey[500], fontSize: 12),
-              ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          physics: const BouncingScrollPhysics(),
-          child: Row(
-            children: List.generate(5, (index) {
-              final hasImage = index < profileImages.length;
-              return Padding(
-                padding: EdgeInsets.only(right: index < 4 ? 8 : 0),
-                child: GestureDetector(
-                  onTap: () =>
-                      _addProfilePicture(uid, index, profileImages),
-                  child: Container(
-                    width: 90,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
-                      color: const Color(0xFF1A1A2E),
-                      border: Border.all(
-                        color: hasImage
-                            ? Colors.transparent
-                            : const Color(0xFF7C3AED).withOpacity(0.2),
-                      ),
-                      image: hasImage
-                          ? DecorationImage(
-                              image:
-                                  NetworkImage(profileImages[index]),
-                              fit: BoxFit.cover,
-                            )
-                          : null,
-                    ),
-                    child: !hasImage
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.add_photo_alternate,
-                                  color: Colors.grey[600], size: 24),
-                              const SizedBox(height: 4),
-                              Text('Add',
-                                  style: TextStyle(
-                                      color: Colors.grey[600],
-                                      fontSize: 11)),
-                            ],
-                          )
-                        : null,
-                  ),
-                ),
-              );
-            }),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildInterestsCard(List<String> interests, String uid) {
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A1A2E),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-            color: const Color(0xFF7C3AED).withOpacity(0.1)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.favorite,
-                  color: Color(0xFF7C3AED), size: 20),
-              const SizedBox(width: 8),
-              const Text(
-                'Interests',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 17,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const Spacer(),
-              GestureDetector(
-                onTap: () => _editInterests(uid, interests),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF7C3AED).withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Text(
-                    'Edit',
-                    style: TextStyle(
-                        color: Color(0xFF7C3AED),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          if (interests.isEmpty)
-            Text('No interests added yet',
-                style: TextStyle(color: Colors.grey[500]))
-          else
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: interests.map((interest) {
-                return Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 8),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        const Color(0xFF7C3AED).withOpacity(0.2),
-                        const Color(0xFFDB2777).withOpacity(0.1),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                        color: const Color(0xFF7C3AED).withOpacity(0.2)),
-                  ),
-                  child: Text(
-                    interest,
-                    style: const TextStyle(
-                        color: Colors.white, fontSize: 13),
                   ),
                 );
-              }).toList(),
-            ),
+              }
+
+              return _ProfileScrollBody(
+                uid: user.id,
+                data: snapshot.data!.first,
+                uploadingImage: _uploadingImage,
+                onAddProfilePicture: _addProfilePicture,
+                onEditInterests: _editInterests,
+                onOpenSettings: () => Scaffold.of(context).openDrawer(),
+              );
+            },
+          ),
         ],
       ),
     );
   }
-
-
-  int? _calculateAge(String? dobString) {
-    if (dobString == null) return null;
-    final dob = DateTime.tryParse(dobString);
-    if (dob == null) return null;
-    final now = DateTime.now();
-    int age = now.year - dob.year;
-    if (now.month < dob.month ||
-        (now.month == dob.month && now.day < dob.day)) {
-      age--;
-    }
-    return age;
-  }
-
   Future<void> _addProfilePicture(
       String uid, int index, List<String> currentImages) async {
     final picked = await _imagePicker.pickImage(
@@ -801,5 +396,467 @@ class _ProfileTabState extends State<ProfileTab> {
         );
       }
     }
+  }
+}
+
+/// Fixed full-screen gradient — never repaints during scroll.
+class _ProfileBackgroundGradient extends StatelessWidget {
+  const _ProfileBackgroundGradient();
+
+  @override
+  Widget build(BuildContext context) {
+    return const RepaintBoundary(
+      child: IgnorePointer(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: [0.0, 0.22, 0.45, 1.0],
+              colors: [
+                Color(0xFF2D1556),
+                Color(0xFF160B28),
+                Color(0xFF0D0818),
+                Color(0xFF0A0A0F),
+              ],
+            ),
+          ),
+          child: SizedBox.expand(),
+        ),
+      ),
+    );
+  }
+}
+
+class _ProfileScrollBody extends StatelessWidget {
+  final String uid;
+  final Map<String, dynamic> data;
+  final bool uploadingImage;
+  final Future<void> Function(String uid, int index, List<String> images)
+      onAddProfilePicture;
+  final Future<void> Function(String uid, List<String> interests)
+      onEditInterests;
+  final VoidCallback onOpenSettings;
+
+  const _ProfileScrollBody({
+    required this.uid,
+    required this.data,
+    required this.uploadingImage,
+    required this.onAddProfilePicture,
+    required this.onEditInterests,
+    required this.onOpenSettings,
+  });
+
+  int? _calculateAge(String? dobString) {
+    if (dobString == null) return null;
+    final dob = DateTime.tryParse(dobString);
+    if (dob == null) return null;
+    final now = DateTime.now();
+    int age = now.year - dob.year;
+    if (now.month < dob.month ||
+        (now.month == dob.month && now.day < dob.day)) {
+      age--;
+    }
+    return age;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final displayName = data['display_name'] as String? ?? 'No name';
+    final firstName = data['first_name'] as String? ?? '';
+    final lastName = data['last_name'] as String? ?? '';
+    final fullName = '$firstName $lastName'.trim();
+    final age = _calculateAge(data['dob'] as String?);
+    final gender = data['gender'] as String?;
+    final interests = List<String>.from(data['interests'] ?? []);
+    final profileImages = List<String>.from(data['profile_images'] ?? []);
+    final mainImageUrl = data['image_url'] as String?;
+
+    if (profileImages.isEmpty && mainImageUrl != null) {
+      profileImages.add(mainImageUrl);
+    }
+
+    final topPadding = MediaQuery.of(context).padding.top;
+
+    return RefreshIndicator(
+      color: const Color(0xFF7C3AED),
+      backgroundColor: const Color(0xFF1A1A2E),
+      onRefresh: () async {
+        await Future.delayed(const Duration(milliseconds: 400));
+      },
+      child: CustomScrollView(
+        key: const PageStorageKey<String>('profile_scroll'),
+        physics: const ClampingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(24, topPadding + 16, 24, 24),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Profile',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: -0.4,
+                        ),
+                      ),
+                      _ProfileIconButton(
+                        icon: Icons.settings_outlined,
+                        onTap: onOpenSettings,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
+                  GestureDetector(
+                    onTap: () => onAddProfilePicture(uid, 0, profileImages),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          width: 110,
+                          height: 110,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: const Color(0xFF7C3AED),
+                              width: 3,
+                            ),
+                          ),
+                          child: ClipOval(
+                            child: profileImages.isNotEmpty
+                                ? Image.network(
+                                    profileImages[0],
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (_, __, ___) => Container(
+                                      color: const Color(0xFF1A1A2E),
+                                      child: const Icon(Icons.person,
+                                          color: Colors.white54, size: 50),
+                                    ),
+                                  )
+                                : Container(
+                                    color: const Color(0xFF1A1A2E),
+                                    child: const Icon(Icons.person,
+                                        color: Colors.white54, size: 50),
+                                  ),
+                          ),
+                        ),
+                        if (uploadingImage)
+                          Container(
+                            width: 110,
+                            height: 110,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.black.withOpacity(0.5),
+                            ),
+                            child: const Center(
+                              child: SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  color: Color(0xFF7C3AED),
+                                  strokeWidth: 2,
+                                ),
+                              ),
+                            ),
+                          ),
+                        Positioned(
+                          bottom: 2,
+                          right: 2,
+                          child: Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF7C3AED),
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                  color: const Color(0xFF0A0A0F), width: 2),
+                            ),
+                            child: const Icon(Icons.camera_alt,
+                                size: 16, color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    fullName.isNotEmpty ? fullName : displayName,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (age != null) ...[
+                        Icon(Icons.cake_outlined,
+                            color: Colors.grey[500], size: 16),
+                        const SizedBox(width: 4),
+                        Text(
+                          '$age years',
+                          style: TextStyle(
+                              color: Colors.grey[400], fontSize: 14),
+                        ),
+                      ],
+                      if (gender != null) ...[
+                        const SizedBox(width: 12),
+                        Icon(
+                          gender == 'male' ? Icons.male : Icons.female,
+                          color: Colors.grey[500],
+                          size: 16,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          gender[0].toUpperCase() + gender.substring(1),
+                          style: TextStyle(
+                              color: Colors.grey[400], fontSize: 14),
+                        ),
+                      ],
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: _ProfilePhotosGrid(
+                uid: uid,
+                profileImages: profileImages,
+                onAddProfilePicture: onAddProfilePicture,
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+              child: _ProfileInterestsCard(
+                interests: interests,
+                uid: uid,
+                onEditInterests: onEditInterests,
+              ),
+            ),
+          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 100)),
+        ],
+      ),
+    );
+  }
+}
+
+class _ProfileIconButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _ProfileIconButton({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: const Color(0xFF1A1A2E),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+              color: const Color(0xFF7C3AED).withOpacity(0.15)),
+        ),
+        child: Icon(icon, color: Colors.white70, size: 20),
+      ),
+    );
+  }
+}
+
+class _ProfilePhotosGrid extends StatelessWidget {
+  final String uid;
+  final List<String> profileImages;
+  final Future<void> Function(String uid, int index, List<String> images)
+      onAddProfilePicture;
+
+  const _ProfilePhotosGrid({
+    required this.uid,
+    required this.profileImages,
+    required this.onAddProfilePicture,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const Text(
+              'Photos',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const Spacer(),
+            if (profileImages.length < 5)
+              Text(
+                '${5 - profileImages.length} slots open',
+                style: TextStyle(color: Colors.grey[500], fontSize: 12),
+              ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          physics: const ClampingScrollPhysics(),
+          child: Row(
+            children: List.generate(5, (index) {
+              final hasImage = index < profileImages.length;
+              return Padding(
+                padding: EdgeInsets.only(right: index < 4 ? 8 : 0),
+                child: GestureDetector(
+                  onTap: () => onAddProfilePicture(uid, index, profileImages),
+                  child: Container(
+                    width: 90,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      color: const Color(0xFF1A1A2E),
+                      border: Border.all(
+                        color: hasImage
+                            ? Colors.transparent
+                            : const Color(0xFF7C3AED).withOpacity(0.2),
+                      ),
+                      image: hasImage
+                          ? DecorationImage(
+                              image: NetworkImage(profileImages[index]),
+                              fit: BoxFit.cover,
+                            )
+                          : null,
+                    ),
+                    child: !hasImage
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.add_photo_alternate,
+                                  color: Colors.grey[600], size: 24),
+                              const SizedBox(height: 4),
+                              Text('Add',
+                                  style: TextStyle(
+                                      color: Colors.grey[600], fontSize: 11)),
+                            ],
+                          )
+                        : null,
+                  ),
+                ),
+              );
+            }),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ProfileInterestsCard extends StatelessWidget {
+  final List<String> interests;
+  final String uid;
+  final Future<void> Function(String uid, List<String> interests)
+      onEditInterests;
+
+  const _ProfileInterestsCard({
+    required this.interests,
+    required this.uid,
+    required this.onEditInterests,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A1A2E),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: const Color(0xFF7C3AED).withOpacity(0.1)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.favorite, color: Color(0xFF7C3AED), size: 20),
+              const SizedBox(width: 8),
+              const Text(
+                'Interests',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const Spacer(),
+              GestureDetector(
+                onTap: () => onEditInterests(uid, interests),
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF7C3AED).withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Text(
+                    'Edit',
+                    style: TextStyle(
+                        color: Color(0xFF7C3AED),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          if (interests.isEmpty)
+            Text('No interests added yet',
+                style: TextStyle(color: Colors.grey[500]))
+          else
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: interests.map((interest) {
+                return Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        const Color(0xFF7C3AED).withOpacity(0.2),
+                        const Color(0xFFDB2777).withOpacity(0.1),
+                      ],
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color: const Color(0xFF7C3AED).withOpacity(0.2)),
+                  ),
+                  child: Text(
+                    interest,
+                    style: const TextStyle(color: Colors.white, fontSize: 13),
+                  ),
+                );
+              }).toList(),
+            ),
+        ],
+      ),
+    );
   }
 }
