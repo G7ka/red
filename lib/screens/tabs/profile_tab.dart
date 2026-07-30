@@ -88,6 +88,8 @@ class _ProfileTabState extends State<ProfileTab> {
       profileImages.add(mainImageUrl);
     }
 
+    final topPadding = MediaQuery.of(context).padding.top;
+
     return Scaffold(
       backgroundColor: const Color(0xFF0A0A0F),
       body: RefreshIndicator(
@@ -103,22 +105,15 @@ class _ProfileTabState extends State<ProfileTab> {
             // Hero Gradient Header
             SliverToBoxAdapter(
               child: Container(
-                padding: EdgeInsets.fromLTRB(
-                  24,
-                  MediaQuery.of(context).padding.top + 16,
-                  24,
-                  24,
-                ),
-                decoration: BoxDecoration(
+                padding: EdgeInsets.fromLTRB(24, topPadding + 16, 24, 24),
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      const Color(0xFF7C3AED).withOpacity(0.35),
-                      const Color(0xFF5B21B6).withOpacity(0.12),
-                      const Color(0xFF0A0A0F),
+                      Color(0xFF2D1556),
+                      Color(0xFF0A0A0F),
                     ],
-                    stops: const [0.0, 0.5, 1.0],
                   ),
                 ),
                 child: Column(

@@ -43,7 +43,8 @@ class ChatsTab extends StatelessWidget {
             );
           }
 
-          if (snapshot.hasError) {
+          // Only show "no internet" if there's an error AND no data at all
+          if (snapshot.hasError && !snapshot.hasData) {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(40),
