@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "979631219036",
+    "project_id": "penguin-af5d8",
+    "storage_bucket": "penguin-af5d8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:979631219036:android:6706cc351a92ed125fe199",
+        "android_client_info": {
+          "package_name": "com.example.penguin_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCR2p_xYTipmY1lksSm5l7Kj8BN5VgN03Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

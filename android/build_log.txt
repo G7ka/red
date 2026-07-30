@@ -1,0 +1,82 @@
+Starting a Gradle Daemon, 3 busy and 1 incompatible and 2 stopped Daemons could not be reused, use --status for details
+> Task :gradle:checkKotlinGradlePluginConfigurationErrors
+> Task :gradle:compileKotlin UP-TO-DATE
+> Task :gradle:compileJava NO-SOURCE
+> Task :gradle:compileGroovy UP-TO-DATE
+> Task :gradle:pluginDescriptors UP-TO-DATE
+> Task :gradle:processResources UP-TO-DATE
+> Task :gradle:classes UP-TO-DATE
+> Task :gradle:jar UP-TO-DATE
+
+> Configure project :app
+WARNING: [CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+[CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+WARNING: [CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+[CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+WARNING: [CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+[CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+WARNING: [CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+[CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+WARNING: [CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+[CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+WARNING: [CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+[CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+WARNING: [CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+[CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+WARNING: [CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+[CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+WARNING: [CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+[CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+WARNING: [CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+[CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+WARNING: [CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+[CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+WARNING: [CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+[CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+WARNING: [CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+[CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+WARNING: [CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+[CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+WARNING: [CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+[CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+WARNING: [CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+[CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+WARNING: [CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+[CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+WARNING: [CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+[CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+WARNING: [CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+[CXX5106] NDK was located by using ndk.dir property. This method is deprecated and will be removed in a future release. Please use android.ndkVersion or android.ndkPath in build.gradle to specify the NDK to use. https://developer.android.com/r/studio-ui/ndk-dir
+
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preDebugBuild UP-TO-DATE
+> Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+
+> Task :app:compileFlutterBuildDebug
+E:\flutter_projects\penguin_app\.dart_tool\package_config.json does not exist.
+Did you run this command from the same directory as your pubspec.yaml file?
+Target gen_dart_plugin_registrant failed: Error: 
+
+
+> Task :app:compileFlutterBuildDebug FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileFlutterBuildDebug'.
+> Process 'command 'C:\flutter_windows_3.27.3-stable\flutter_windows_3.27.3-stable\flutter\bin\flutter.bat'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.10.2/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 45s
+7 actionable tasks: 2 executed, 5 up-to-date
