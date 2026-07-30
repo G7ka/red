@@ -30,13 +30,6 @@ class ChatsTab extends StatelessWidget {
             fontWeight: FontWeight.w700,
           ),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search, color: Colors.white.withOpacity(0.5)),
-            onPressed: () {},
-          ),
-          const SizedBox(width: 4),
-        ],
       ),
       body: StreamBuilder<List<Map<String, dynamic>>>(
         stream: chatService.getUserChatsStream(),
@@ -49,17 +42,40 @@ class ChatsTab extends StatelessWidget {
 
           if (snapshot.hasError) {
             return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error_outline,
-                      size: 56, color: Colors.white.withOpacity(0.15)),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Something went wrong',
-                    style: TextStyle(color: Colors.grey[500], fontSize: 15),
-                  ),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.all(40),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 80,
+                      height: 80,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.red.withOpacity(0.1),
+                      ),
+                      child: Icon(Icons.sms_failed_outlined,
+                          size: 36,
+                          color: Colors.red.withOpacity(0.6)),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Failed to load chats',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 19,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Please check your connection and try again.',
+                      style: TextStyle(
+                          color: Colors.grey[500], fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
             );
           }

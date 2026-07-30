@@ -113,32 +113,14 @@ class _AnonymousTabState extends State<AnonymousTab>
             floating: false,
             pinned: true,
             backgroundColor: const Color(0xFF0A0A0F),
-            title: Row(
-              children: [
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF7C3AED),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Center(
-                    child: ClipOval(
-                      child: Image.asset('assets/images/usethis.png', width: 32, height: 32, fit: BoxFit.cover),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                const Text(
-                  'Anonymous',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -0.3,
-                  ),
-                ),
-              ],
+            title: const Text(
+              'Anonymous',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+                letterSpacing: -0.3,
+              ),
             ),
             actions: [
               _buildNotificationButton(),
