@@ -1,6 +1,6 @@
 # Penguin App 🐧
 
-Welcome to the Penguin App repository! This is a Flutter project using Supabase for the backend and Firebase for push notifications. 
+Welcome to the Penguin App repository! This is a Flutter project using Supabase for the backend.
 
 ## 🚀 Getting Started for Collaborators
 
@@ -26,9 +26,7 @@ flutter pub get
 ```
 
 ### 4. Backend & API Keys
-You **do not** need to manually configure `.env` files for the database to run locally! The Supabase and Firebase initializations are currently handled directly inside `lib/main.dart`. 
-
-*Note: If you run into any issues with push notifications on a physical device, you may need the `google-services.json` (Android) or `GoogleService-Info.plist` (iOS) files if they aren't already committed.*
+You **do not** need to manually configure `.env` files for the database to run locally! The Supabase initialization is currently handled directly inside `lib/main.dart`.
 
 ### 5. Run the App
 Connect a physical device or start an emulator, then run:
