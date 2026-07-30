@@ -18,7 +18,7 @@ import '../settings/help_support_screen.dart';
 final GlobalKey<_HomeScreenState> homeScreenKey = GlobalKey<_HomeScreenState>();
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  HomeScreen({Key? key}) : super(key: key ?? homeScreenKey);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -27,6 +27,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _index = 0;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void openSettingsDrawer() {
+    _scaffoldKey.currentState?.openDrawer();
+  }
 
   @override
   void initState() {

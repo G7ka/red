@@ -5,6 +5,7 @@ import 'dart:io';
 
 import '../../services/auth_service.dart';
 import '../auth/login_screen.dart';
+import '../home/home_screen.dart';
 
 class ProfileTab extends StatefulWidget {
   const ProfileTab({super.key});
@@ -82,7 +83,14 @@ class _ProfileTabState extends State<ProfileTab>
                 uploadingImage: _uploadingImage,
                 onAddProfilePicture: _addProfilePicture,
                 onEditInterests: _editInterests,
-                onOpenSettings: () => Scaffold.of(context).openDrawer(),
+                onOpenSettings: () {
+                  final scaffoldState = Scaffold.maybeOf(context);
+                  if (scaffoldState != null && scaffoldState.hasDrawer) {
+                    scaffoldState.openDrawer();
+                  } else {
+                    homeScreenKey.currentState?.openSettingsDrawer();
+                  }
+                },
               );
             },
           ),
@@ -664,7 +672,15 @@ class _ProfileIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        onTap();
+        final scaffoldState = Scaffold.maybeOf(context);
+        if (scaffoldState != null && scaffoldState.hasDrawer) {
+          scaffoldState.openDrawer();
+        } else {
+          homeScreenKey.currentState?.openSettingsDrawer();
+        }
+      },
       child: Container(
         width: 40,
         height: 40,
